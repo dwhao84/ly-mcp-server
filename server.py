@@ -215,7 +215,30 @@ def create_legislator_card_html() -> str:
         `;
       }
 
-      function renderFromOutput(output) {
+      function normalizeOutput(payload) {
+        const value = payload || {};
+
+        if (value.legislator) {
+          return value;
+        }
+
+        if (value.structuredContent?.legislator) {
+          return value.structuredContent;
+        }
+
+        if (value.toolOutput?.legislator) {
+          return value.toolOutput;
+        }
+
+        if (value.toolOutput?.structuredContent?.legislator) {
+          return value.toolOutput.structuredContent;
+        }
+
+        return value.structuredContent || value.toolOutput || value;
+      }
+
+      function renderFromOutput(payload) {
+        const output = normalizeOutput(payload);
         const legislator = output.legislator;
         const root = document.getElementById("root");
 
@@ -254,12 +277,15 @@ def create_legislator_card_html() -> str:
       }
 
       function render() {
-        renderFromOutput(window.openai?.toolOutput || {});
+        renderFromOutput({
+          toolOutput: window.openai?.toolOutput,
+          toolResponseMetadata: window.openai?.toolResponseMetadata,
+        });
       }
 
       render();
       window.addEventListener("openai:set_globals", (event) => {
-        renderFromOutput(event.detail?.globals?.toolOutput || window.openai?.toolOutput || {});
+        renderFromOutput(event.detail?.globals || {});
       });
 
       window.addEventListener("message", (event) => {
@@ -269,7 +295,7 @@ def create_legislator_card_html() -> str:
         if (message.method !== "ui/notifications/tool-result") return;
 
         const result = message.params || {};
-        renderFromOutput(result.structuredContent || result);
+        renderFromOutput(result);
       });
     </script>
   </body>
