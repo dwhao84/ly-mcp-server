@@ -16,7 +16,7 @@ LY_HEADERS = {
     "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8",
     "Accept-Encoding": "identity",
 }
-CARD_TEMPLATE_URI = "ui://widget/legislator-card-v3.html"
+CARD_TEMPLATE_URI = "ui://widget/legislator-card-v4.html"
 CARD_MIME_TYPE = "text/html+skybridge"
 CARD_TOOL_META = {
     "openai/outputTemplate": CARD_TEMPLATE_URI,
