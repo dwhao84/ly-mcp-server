@@ -50,7 +50,7 @@ PARTY_LIST_TOOL_META = {
 }
 
 PARTY_LIST_RESOURCE_META = {
-    "openai/widgetDescription": "依政黨顯示立法委員名單、照片、選區與近期委員會的列表。",
+    "openai/widgetDescription": "依政黨以卡片顯示每位立法委員的照片、政黨、選區、委員會、聯絡方式、學歷與經歷檔案資料。",
     "openai/widgetPrefersBorder": True,
     "openai/widgetDomain": WIDGET_DOMAIN,
     "openai/widgetCSP": {

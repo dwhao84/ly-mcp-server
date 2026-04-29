@@ -84,7 +84,7 @@ PORT=8123 python server.py
 目前資料卡 template URI：
 
 ```text
-ui://widget/legislator-card-v4.html
+ui://widget/legislator-card-v5.html
 ```
 
 legacy URI 仍保留：

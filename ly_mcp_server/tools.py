@@ -13,7 +13,9 @@ def register_tools(mcp) -> None:
         select_term: str = "all",
     ) -> dict:
         """
-        查詢立法院開放資料 API。
+        低階除錯用：查詢立法院開放資料 API，回傳原始資料集內容。
+        不要用這個工具回答「國民黨有哪些人」、「民進黨立委名單」或任何需要卡片顯示的立委查詢。
+        若要查立委資料卡，請使用 get_legislator_profile；若要查政黨有哪些立委，請使用 get_legislators_by_party。
         """
         return await fetch_legislature_dataset(
             dataset_id=dataset_id,
@@ -60,12 +62,18 @@ def register_tools(mcp) -> None:
     @mcp.tool(meta=PARTY_LIST_TOOL_META)
     async def get_legislators_by_party(party: str = "台灣民眾黨") -> ToolResult:
         """
-        查詢指定政黨的立法委員名單，預設查詢台灣民眾黨。
+        查詢指定政黨有哪些立法委員，並用卡片 widget 顯示每位委員的檔案資料。
+
+        適用於：
+        - 國民黨有哪些人
+        - 民進黨有哪些立委
+        - 民眾黨立委名單
+        - 顯示某政黨黨員資料卡
         """
         result = await lookup_legislators_by_party(party)
 
         return ToolResult(
-            content=result["message"],
+            content=f"{result['message']}以下以卡片顯示每位委員的檔案資料。",
             structured_content=result,
             meta=PARTY_LIST_TOOL_META,
         )
