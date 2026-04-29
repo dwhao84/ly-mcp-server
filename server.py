@@ -17,13 +17,17 @@ LY_HEADERS = {
     "Accept-Encoding": "identity",
 }
 CARD_TEMPLATE_URI = "ui://widget/legislator-card-v2.html"
-CARD_MIME_TYPE = "text/html;profile=mcp-app"
+CARD_MIME_TYPE = "text/html+skybridge"
 CARD_TOOL_META = {
     "openai/outputTemplate": CARD_TEMPLATE_URI,
     "openai/toolInvocation/invoking": "查詢立委資料中...",
     "openai/toolInvocation/invoked": "立委資料已載入",
     "openai/widgetAccessible": True,
-    "ui": {"resourceUri": CARD_TEMPLATE_URI},
+    "openai/resultCanProduceWidget": True,
+    "ui": {
+        "resourceUri": CARD_TEMPLATE_URI,
+        "visibility": ["model", "app"],
+    },
 }
 
 
@@ -254,6 +258,10 @@ def create_legislator_card_html() -> str:
       }
 
       render();
+      window.addEventListener("openai:set_globals", (event) => {
+        renderFromOutput(event.detail?.globals?.toolOutput || window.openai?.toolOutput || {});
+      });
+
       window.addEventListener("message", (event) => {
         if (event.source !== window.parent) return;
         const message = event.data;
@@ -276,6 +284,10 @@ def create_legislator_card_html() -> str:
     meta={
         "openai/widgetDescription": "顯示立法委員照片、政黨、選區、委員會、聯絡方式與簡歷的資料卡。",
         "openai/widgetPrefersBorder": True,
+        "openai/widgetDomain": "https://ly-mcp-server.onrender.com",
+        "openai/widgetCSP": {
+            "resource_domains": ["https://www.ly.gov.tw"],
+        },
         "ui": {
             "prefersBorder": True,
             "domain": "https://ly-mcp-server.onrender.com",
