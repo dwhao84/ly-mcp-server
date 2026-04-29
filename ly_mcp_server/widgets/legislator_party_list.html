@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        --surface: #ffffff;
+        --surface-muted: #f8fafc;
+        --border: #e5e7eb;
+        --border-subtle: #f1f5f9;
+        --text-primary: #111827;
+        --text-secondary: #64748b;
+        --accent: #2563eb;
+        --accent-soft: #dbeafe;
+        --shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme]) {
+          color-scheme: dark;
+          --surface: #111827;
+          --surface-muted: #0f172a;
+          --border: rgba(148, 163, 184, 0.28);
+          --border-subtle: rgba(148, 163, 184, 0.18);
+          --text-primary: #f8fafc;
+          --text-secondary: #cbd5e1;
+          --accent: #60a5fa;
+          --accent-soft: rgba(59, 130, 246, 0.18);
+          --shadow: 0 20px 55px rgba(2, 6, 23, 0.34);
+        }
+      }
+
+      :root[data-theme="dark"] {
+        color-scheme: dark;
+        --surface: #111827;
+        --surface-muted: #0f172a;
+        --border: rgba(148, 163, 184, 0.28);
+        --border-subtle: rgba(148, 163, 184, 0.18);
+        --text-primary: #f8fafc;
+        --text-secondary: #cbd5e1;
+        --accent: #60a5fa;
+        --accent-soft: rgba(59, 130, 246, 0.18);
+        --shadow: 0 20px 55px rgba(2, 6, 23, 0.34);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 18px;
+        background: transparent;
+        color: var(--text-primary);
+      }
+
+      .panel {
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+      }
+
+      .hero {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 22px;
+        border-bottom: 1px solid var(--border-subtle);
+        background:
+          radial-gradient(circle at top left, var(--accent-soft), transparent 34%),
+          var(--surface-muted);
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .title {
+        margin: 0;
+        font-size: clamp(28px, 7vw, 42px);
+        line-height: 1.05;
+        letter-spacing: -0.04em;
+      }
+
+      .summary {
+        margin: 10px 0 0;
+        color: var(--text-secondary);
+        font-size: 14px;
+      }
+
+      .count {
+        flex: 0 0 auto;
+        min-width: 86px;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 12px;
+        background: var(--surface);
+        text-align: center;
+      }
+
+      .count strong {
+        display: block;
+        font-size: 32px;
+        line-height: 1;
+      }
+
+      .count span {
+        color: var(--text-secondary);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+        padding: 16px;
+      }
+
+      .member {
+        display: grid;
+        grid-template-columns: 58px 1fr;
+        gap: 12px;
+        min-width: 0;
+        border: 1px solid var(--border-subtle);
+        border-radius: 18px;
+        padding: 12px;
+        background: var(--surface);
+      }
+
+      .photo,
+      .photoFallback {
+        width: 58px;
+        height: 72px;
+        border-radius: 14px;
+        object-fit: cover;
+        background: var(--surface-muted);
+      }
+
+      .photoFallback {
+        display: grid;
+        place-items: center;
+        color: var(--accent);
+        font-weight: 900;
+      }
+
+      .name {
+        margin: 2px 0 4px;
+        font-size: 18px;
+        line-height: 1.2;
+      }
+
+      .meta,
+      .committee {
+        margin: 0;
+        color: var(--text-secondary);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .committee {
+        margin-top: 8px;
+      }
+
+      .footer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid var(--border-subtle);
+        padding: 14px 16px;
+        color: var(--text-secondary);
+        font-size: 12px;
+      }
+
+      .actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      .button {
+        appearance: none;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 8px 12px;
+        background: var(--surface);
+        color: var(--text-primary);
+        cursor: pointer;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .buttonPrimary {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: #ffffff;
+      }
+
+      .loading,
+      .empty {
+        padding: 22px;
+        color: var(--text-secondary);
+      }
+
+      @media (max-width: 560px) {
+        body {
+          padding: 12px;
+        }
+
+        .hero {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .count {
+          align-self: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main id="root" class="panel">
+      <div class="loading">正在載入政黨立委名單...</div>
+    </main>
+
+    <script>
+      const pendingRequests = new Map();
+      let nextRequestId = 1;
+
+      function applyTheme(theme) {
+        const value = typeof theme === "string" ? theme : theme?.mode || theme?.name;
+        if (value === "dark" || value === "light") {
+          document.documentElement.dataset.theme = value;
+          return;
+        }
+
+        document.documentElement.removeAttribute("data-theme");
+      }
+
+      function rpcRequest(method, params) {
+        if (!window.parent || window.parent === window) {
+          return Promise.reject(new Error("Apps bridge parent window is unavailable"));
+        }
+
+        const id = nextRequestId++;
+
+        return new Promise((resolve, reject) => {
+          const timeout = window.setTimeout(() => {
+            pendingRequests.delete(id);
+            reject(new Error(`Apps bridge request timed out: ${method}`));
+          }, 6000);
+
+          pendingRequests.set(id, { resolve, reject, timeout });
+          window.parent.postMessage({ jsonrpc: "2.0", id, method, params }, "*");
+        });
+      }
+
+      async function callTool(name, args) {
+        try {
+          return await rpcRequest("tools/call", {
+            name,
+            arguments: args,
+          });
+        } catch (error) {
+          if (typeof window.openai?.callTool !== "function") throw error;
+          return window.openai.callTool(name, args);
+        }
+      }
+
+      function sendFollowUpMessage(text) {
+        window.parent?.postMessage(
+          {
+            jsonrpc: "2.0",
+            method: "ui/message",
+            params: {
+              role: "user",
+              content: [{ type: "text", text }],
+            },
+          },
+          "*",
+        );
+      }
+
+      function escapeHtml(value) {
+        return String(value || "").replace(/[&<>"']/g, (char) => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;",
+        }[char]));
+      }
+
+      function splitItems(value) {
+        return String(value || "")
+          .split(/[;；\n]/)
+          .map((item) => item.trim())
+          .filter(Boolean);
+      }
+
+      function normalizeOutput(payload) {
+        const value = payload || {};
+
+        if (Array.isArray(value.legislators)) return value;
+        if (Array.isArray(value.structuredContent?.legislators)) return value.structuredContent;
+        if (Array.isArray(value.toolOutput?.legislators)) return value.toolOutput;
+        if (Array.isArray(value.toolOutput?.structuredContent?.legislators)) return value.toolOutput.structuredContent;
+        if (Array.isArray(value.result?.structuredContent?.legislators)) return value.result.structuredContent;
+        if (Array.isArray(value.result?.legislators)) return value.result;
+
+        return value.structuredContent || value.toolOutput || value;
+      }
+
+      function memberCard(member) {
+        const photo = member.imageUrl || "";
+        const initials = String(member.name || "?").slice(0, 2);
+        const committee = splitItems(member.committee).slice(-1)[0] || "委員會資料未提供";
+
+        return `
+          <article class="member">
+            ${
+              photo
+                ? `<img class="photo" src="${escapeHtml(photo)}" alt="${escapeHtml(member.name)}照片" />`
+                : `<div class="photoFallback">${escapeHtml(initials)}</div>`
+            }
+            <div>
+              <h2 class="name">${escapeHtml(member.name)}</h2>
+              <p class="meta">${escapeHtml(member.areaName || "選區未提供")}</p>
+              <p class="committee">${escapeHtml(committee)}</p>
+            </div>
+          </article>
+        `;
+      }
+
+      function renderFromOutput(payload) {
+        const output = normalizeOutput(payload);
+        const root = document.getElementById("root");
+        const legislators = output.legislators || [];
+        const party = output.party || getToolInputParty(payload);
+
+        if (!Array.isArray(legislators) || legislators.length === 0 || output.found === false) {
+          return false;
+        }
+
+        root.className = "panel";
+        root.innerHTML = `
+          <section class="hero">
+            <div>
+              <p class="eyebrow">立法院政黨名單</p>
+              <h1 class="title">${escapeHtml(party)}</h1>
+              <p class="summary">目前資料集中共有 ${escapeHtml(legislators.length)} 位立法委員。</p>
+            </div>
+            <div class="count" aria-label="立委人數">
+              <strong>${escapeHtml(legislators.length)}</strong>
+              <span>位委員</span>
+            </div>
+          </section>
+          <section class="list">
+            ${legislators.map(memberCard).join("")}
+          </section>
+          <footer class="footer">
+            <span>資料來源：立法院開放資料</span>
+            <div class="actions" aria-label="名單操作">
+              <button class="button" type="button" data-action="refresh">重新整理</button>
+              <button class="button buttonPrimary" type="button" data-action="ask">詢問此政黨重點</button>
+            </div>
+          </footer>
+        `;
+        bindActions(party);
+        return true;
+      }
+
+      function bindActions(party) {
+        document.querySelector('[data-action="refresh"]')?.addEventListener("click", async () => {
+          await hydrateWithToolCall(party);
+        });
+
+        document.querySelector('[data-action="ask"]')?.addEventListener("click", () => {
+          sendFollowUpMessage(`請整理 ${party} 在目前立法院名單中的席次、委員分布與可觀察重點。`);
+        });
+      }
+
+      function getToolInputParty(payload) {
+        return (
+          payload?.toolInput?.party ||
+          payload?.input?.party ||
+          window.openai?.toolInput?.party ||
+          "台灣民眾黨"
+        );
+      }
+
+      function renderEmpty(message) {
+        const root = document.getElementById("root");
+        root.className = "panel";
+        root.innerHTML = `<div class="empty">${escapeHtml(message || "找不到可顯示的政黨立委名單。")}</div>`;
+      }
+
+      async function hydrateWithToolCall(party) {
+        try {
+          const result = await callTool("get_legislators_by_party_data", { party });
+          return renderFromOutput(result);
+        } catch (error) {
+          console.error("Unable to hydrate party legislator list", error);
+          return false;
+        }
+      }
+
+      async function render(payload = {}) {
+        applyTheme(payload.theme || window.openai?.theme);
+
+        const bootPayload = {
+          toolOutput: window.openai?.toolOutput,
+          toolResponseMetadata: window.openai?.toolResponseMetadata,
+          toolInput: window.openai?.toolInput,
+          ...payload,
+        };
+
+        if (renderFromOutput(bootPayload)) return;
+
+        const party = getToolInputParty(bootPayload);
+        if (await hydrateWithToolCall(party)) return;
+
+        renderEmpty(`找不到 ${party} 的可顯示委員名單。`);
+      }
+
+      render();
+      window.addEventListener("openai:set_globals", (event) => {
+        render(event.detail?.globals || event.detail || {});
+      });
+
+      window.addEventListener("message", (event) => {
+        if (event.source !== window.parent) return;
+        const message = event.data;
+        if (!message || message.jsonrpc !== "2.0") return;
+
+        if (Object.prototype.hasOwnProperty.call(message, "id") && pendingRequests.has(message.id)) {
+          const request = pendingRequests.get(message.id);
+          window.clearTimeout(request.timeout);
+          pendingRequests.delete(message.id);
+
+          if (message.error) {
+            request.reject(new Error(message.error.message || "Apps bridge request failed"));
+          } else {
+            request.resolve(message.result);
+          }
+          return;
+        }
+
+        if (message.method === "ui/notifications/tool-input") {
+          render({ toolInput: message.params || {} });
+          return;
+        }
+
+        if (message.method !== "ui/notifications/tool-result") return;
+
+        const result = message.params || {};
+        render(result);
+      });
+    </script>
+  </body>
+</html>

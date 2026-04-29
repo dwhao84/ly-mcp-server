@@ -17,5 +17,6 @@ DEFAULT_PORT = 8000
 
 CARD_TEMPLATE_URI = "ui://widget/legislator-card-v4.html"
 LEGACY_CARD_TEMPLATE_URI = "ui://widget/legislator-card-v3.html"
+PARTY_LIST_TEMPLATE_URI = "ui://widget/legislator-party-list-v1.html"
 CARD_MIME_TYPE = "text/html+skybridge"
 WIDGET_DOMAIN = "https://ly-mcp-server.onrender.com"
