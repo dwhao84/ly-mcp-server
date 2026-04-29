@@ -17,6 +17,7 @@ LY_HEADERS = {
     "Accept-Encoding": "identity",
 }
 CARD_TEMPLATE_URI = "ui://widget/legislator-card-v4.html"
+LEGACY_CARD_TEMPLATE_URI = "ui://widget/legislator-card-v3.html"
 CARD_MIME_TYPE = "text/html+skybridge"
 CARD_TOOL_META = {
     "openai/outputTemplate": CARD_TEMPLATE_URI,
@@ -551,26 +552,35 @@ def create_legislator_card_html() -> str:
 """.strip()
 
 
+CARD_RESOURCE_META = {
+    "openai/widgetDescription": "顯示立法委員照片、政黨、選區、委員會、聯絡方式與簡歷的資料卡。",
+    "openai/widgetPrefersBorder": True,
+    "openai/widgetDomain": "https://ly-mcp-server.onrender.com",
+    "openai/widgetCSP": {
+        "resource_domains": ["https://www.ly.gov.tw"],
+    },
+    "ui": {
+        "prefersBorder": True,
+        "domain": "https://ly-mcp-server.onrender.com",
+        "csp": {
+            "connectDomains": [],
+            "resourceDomains": ["https://www.ly.gov.tw"],
+        },
+    },
+}
+
+
+@mcp.resource(
+    LEGACY_CARD_TEMPLATE_URI,
+    name="立委資料卡片",
+    mime_type=CARD_MIME_TYPE,
+    meta=CARD_RESOURCE_META,
+)
 @mcp.resource(
     CARD_TEMPLATE_URI,
     name="立委資料卡片",
     mime_type=CARD_MIME_TYPE,
-    meta={
-        "openai/widgetDescription": "顯示立法委員照片、政黨、選區、委員會、聯絡方式與簡歷的資料卡。",
-        "openai/widgetPrefersBorder": True,
-        "openai/widgetDomain": "https://ly-mcp-server.onrender.com",
-        "openai/widgetCSP": {
-            "resource_domains": ["https://www.ly.gov.tw"],
-        },
-        "ui": {
-            "prefersBorder": True,
-            "domain": "https://ly-mcp-server.onrender.com",
-            "csp": {
-                "connectDomains": [],
-                "resourceDomains": ["https://www.ly.gov.tw"],
-            },
-        },
-    },
+    meta=CARD_RESOURCE_META,
 )
 async def legislator_card_template() -> str:
     return create_legislator_card_html()
