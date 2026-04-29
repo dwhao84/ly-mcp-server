@@ -76,7 +76,7 @@ def create_legislator_card_html() -> str:
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       :root {
-        color-scheme: light dark;
+        color-scheme: light;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
 
@@ -89,13 +89,11 @@ def create_legislator_card_html() -> str:
       .card {
         position: relative;
         overflow: hidden;
-        border: 1px solid rgba(127, 127, 127, 0.22);
+        border: 1px solid #e5e7eb;
         border-radius: 28px;
-        background:
-          radial-gradient(circle at 18% 0%, rgba(60, 132, 255, 0.24), transparent 34%),
-          linear-gradient(145deg, color-mix(in srgb, Canvas 96%, CanvasText 4%), color-mix(in srgb, Canvas 88%, CanvasText 12%));
-        color: CanvasText;
-        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.16);
+        background: #ffffff;
+        color: #111827;
+        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
       }
 
       .hero {
@@ -112,19 +110,19 @@ def create_legislator_card_html() -> str:
         inset: auto 0 0;
         height: 1px;
         content: "";
-        background: linear-gradient(90deg, transparent, rgba(127, 127, 127, 0.26), transparent);
+        background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
       }
 
       .avatar {
         width: 116px;
         height: 136px;
         flex: 0 0 auto;
-        border: 4px solid rgba(255, 255, 255, 0.76);
+        border: 1px solid #e5e7eb;
         border-radius: 26px;
         object-fit: cover;
         object-position: top center;
-        background: rgba(127, 127, 127, 0.18);
-        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+        background: #f9fafb;
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
       }
 
       .avatarFallback {
@@ -140,11 +138,11 @@ def create_legislator_card_html() -> str:
         align-items: center;
         gap: 8px;
         margin-bottom: 10px;
-        border: 1px solid rgba(127, 127, 127, 0.2);
+        border: 1px solid #e5e7eb;
         border-radius: 999px;
         padding: 6px 10px;
-        background: rgba(255, 255, 255, 0.16);
-        color: color-mix(in srgb, CanvasText 68%, transparent);
+        background: #ffffff;
+        color: #6b7280;
         font-size: 12px;
         font-weight: 750;
       }
@@ -158,7 +156,7 @@ def create_legislator_card_html() -> str:
 
       .subtitle {
         margin: 0;
-        color: color-mix(in srgb, CanvasText 72%, transparent);
+        color: #6b7280;
         font-size: 15px;
         line-height: 1.45;
       }
@@ -172,18 +170,18 @@ def create_legislator_card_html() -> str:
       .field {
         display: grid;
         gap: 4px;
-        border: 1px solid rgba(127, 127, 127, 0.16);
+        border: 1px solid #e5e7eb;
         border-radius: 18px;
         padding: 13px 14px;
-        background: rgba(255, 255, 255, 0.08);
+        background: #ffffff;
       }
 
       .field:last-child {
-        border-bottom: 1px solid rgba(127, 127, 127, 0.16);
+        border-bottom: 1px solid #e5e7eb;
       }
 
       .label {
-        color: color-mix(in srgb, CanvasText 55%, transparent);
+        color: #6b7280;
         font-size: 12px;
         font-weight: 700;
         letter-spacing: 0.08em;
@@ -207,17 +205,18 @@ def create_legislator_card_html() -> str:
       .chip {
         border-radius: 999px;
         padding: 7px 11px;
-        background: color-mix(in srgb, #2b7fff 16%, Canvas 84%);
-        color: color-mix(in srgb, CanvasText 86%, #2b7fff 14%);
+        background: #f3f7ff;
+        color: #1f4f9a;
         font-size: 13px;
         font-weight: 750;
       }
 
       .empty {
         padding: 18px;
-        border: 1px dashed rgba(127, 127, 127, 0.35);
+        border: 1px dashed #d1d5db;
         border-radius: 18px;
-        color: color-mix(in srgb, CanvasText 68%, transparent);
+        color: #6b7280;
+        background: #ffffff;
       }
 
       .grid {
@@ -228,6 +227,79 @@ def create_legislator_card_html() -> str:
 
       .wide {
         grid-column: 1 / -1;
+      }
+
+      .loading .hero {
+        align-items: center;
+      }
+
+      .skeleton {
+        position: relative;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #eef2f7;
+      }
+
+      .skeleton::after {
+        position: absolute;
+        inset: 0;
+        content: "";
+        transform: translateX(-100%);
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.78), transparent);
+        animation: shimmer 1.35s ease-in-out infinite;
+      }
+
+      .skeletonAvatar {
+        width: 116px;
+        height: 136px;
+        flex: 0 0 auto;
+        border-radius: 26px;
+      }
+
+      .skeletonPill {
+        width: 132px;
+        height: 27px;
+        margin-bottom: 12px;
+      }
+
+      .skeletonName {
+        width: min(280px, 54vw);
+        height: 46px;
+        margin-bottom: 10px;
+      }
+
+      .skeletonSubtitle {
+        width: 148px;
+        height: 18px;
+      }
+
+      .skeletonChip {
+        width: 72px;
+        height: 30px;
+      }
+
+      .skeletonField {
+        gap: 12px;
+      }
+
+      .skeletonLabel {
+        width: 72px;
+        height: 13px;
+      }
+
+      .skeletonValue {
+        width: 72%;
+        height: 18px;
+      }
+
+      .skeletonValueShort {
+        width: 46%;
+      }
+
+      @keyframes shimmer {
+        100% {
+          transform: translateX(100%);
+        }
       }
 
       @media (max-width: 560px) {
@@ -246,6 +318,12 @@ def create_legislator_card_html() -> str:
           border-radius: 22px;
         }
 
+        .skeletonAvatar {
+          width: 92px;
+          height: 112px;
+          border-radius: 22px;
+        }
+
         .content {
           padding: 16px 18px 18px;
         }
@@ -257,7 +335,51 @@ def create_legislator_card_html() -> str:
     </style>
   </head>
   <body>
-    <main id="root" class="empty">正在載入立委資料...</main>
+    <main id="root" class="card loading">
+      <section class="hero">
+        <div class="skeleton skeletonAvatar"></div>
+        <div>
+          <div class="skeleton skeletonPill"></div>
+          <div class="skeleton skeletonName"></div>
+          <div class="skeleton skeletonSubtitle"></div>
+          <div class="chips">
+            <div class="skeleton skeletonChip"></div>
+            <div class="skeleton skeletonChip"></div>
+            <div class="skeleton skeletonChip"></div>
+          </div>
+        </div>
+      </section>
+      <section class="content">
+        <div class="grid">
+          <section class="field skeletonField">
+            <div class="skeleton skeletonLabel"></div>
+            <div class="skeleton skeletonValue skeletonValueShort"></div>
+          </section>
+          <section class="field skeletonField">
+            <div class="skeleton skeletonLabel"></div>
+            <div class="skeleton skeletonValue"></div>
+          </section>
+          <section class="field skeletonField">
+            <div class="skeleton skeletonLabel"></div>
+            <div class="skeleton skeletonValue"></div>
+          </section>
+          <section class="field skeletonField">
+            <div class="skeleton skeletonLabel"></div>
+            <div class="skeleton skeletonValue"></div>
+          </section>
+          <section class="field wide skeletonField">
+            <div class="skeleton skeletonLabel"></div>
+            <div class="skeleton skeletonValue"></div>
+            <div class="skeleton skeletonValue skeletonValueShort"></div>
+          </section>
+          <section class="field wide skeletonField">
+            <div class="skeleton skeletonLabel"></div>
+            <div class="skeleton skeletonValue"></div>
+            <div class="skeleton skeletonValue"></div>
+          </section>
+        </div>
+      </section>
+    </main>
 
     <script>
       function splitItems(value) {
