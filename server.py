@@ -37,6 +37,7 @@ async def fetch_legislature_dataset(
         timeout=20,
         verify=create_ly_ssl_context(),
         trust_env=False,
+        headers={"Accept-Encoding": "identity"},
     ) as client:
         response = await client.get(BASE_URL, params=params)
         response.raise_for_status()
