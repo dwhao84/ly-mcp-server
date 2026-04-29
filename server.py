@@ -16,7 +16,7 @@ LY_HEADERS = {
     "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8",
     "Accept-Encoding": "identity",
 }
-CARD_TEMPLATE_URI = "ui://widget/legislator-card-v2.html"
+CARD_TEMPLATE_URI = "ui://widget/legislator-card-v3.html"
 CARD_MIME_TYPE = "text/html+skybridge"
 CARD_TOOL_META = {
     "openai/outputTemplate": CARD_TEMPLATE_URI,
@@ -82,43 +82,78 @@ def create_legislator_card_html() -> str:
 
       body {
         margin: 0;
-        padding: 16px;
+        padding: 18px;
         background: transparent;
       }
 
       .card {
+        position: relative;
         overflow: hidden;
         border: 1px solid rgba(127, 127, 127, 0.22);
-        border-radius: 24px;
-        background: color-mix(in srgb, Canvas 94%, CanvasText 6%);
+        border-radius: 28px;
+        background:
+          radial-gradient(circle at 18% 0%, rgba(60, 132, 255, 0.24), transparent 34%),
+          linear-gradient(145deg, color-mix(in srgb, Canvas 96%, CanvasText 4%), color-mix(in srgb, Canvas 88%, CanvasText 12%));
         color: CanvasText;
-        box-shadow: 0 18px 60px rgba(0, 0, 0, 0.10);
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.16);
       }
 
       .hero {
+        position: relative;
         display: flex;
-        gap: 16px;
-        align-items: center;
-        padding: 20px;
-        background:
-          radial-gradient(circle at top left, rgba(43, 127, 255, 0.20), transparent 38%),
-          linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(127, 127, 127, 0.08));
+        gap: 18px;
+        align-items: flex-end;
+        padding: 24px;
+        min-height: 156px;
+      }
+
+      .hero::after {
+        position: absolute;
+        inset: auto 0 0;
+        height: 1px;
+        content: "";
+        background: linear-gradient(90deg, transparent, rgba(127, 127, 127, 0.26), transparent);
       }
 
       .avatar {
-        width: 88px;
-        height: 88px;
+        width: 116px;
+        height: 136px;
         flex: 0 0 auto;
-        border: 3px solid rgba(255, 255, 255, 0.7);
-        border-radius: 22px;
+        border: 4px solid rgba(255, 255, 255, 0.76);
+        border-radius: 26px;
         object-fit: cover;
+        object-position: top center;
         background: rgba(127, 127, 127, 0.18);
+        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+      }
+
+      .avatarFallback {
+        display: grid;
+        place-items: center;
+        font-size: 34px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 10px;
+        border: 1px solid rgba(127, 127, 127, 0.2);
+        border-radius: 999px;
+        padding: 6px 10px;
+        background: rgba(255, 255, 255, 0.16);
+        color: color-mix(in srgb, CanvasText 68%, transparent);
+        font-size: 12px;
+        font-weight: 750;
       }
 
       .name {
         margin: 0 0 6px;
-        font-size: 28px;
+        font-size: clamp(30px, 8vw, 46px);
         line-height: 1.15;
+        letter-spacing: -0.04em;
       }
 
       .subtitle {
@@ -130,20 +165,21 @@ def create_legislator_card_html() -> str:
 
       .content {
         display: grid;
-        gap: 12px;
-        padding: 18px 20px 20px;
+        gap: 14px;
+        padding: 20px 24px 24px;
       }
 
       .field {
         display: grid;
         gap: 4px;
-        padding-bottom: 12px;
-        border-bottom: 1px solid rgba(127, 127, 127, 0.18);
+        border: 1px solid rgba(127, 127, 127, 0.16);
+        border-radius: 18px;
+        padding: 13px 14px;
+        background: rgba(255, 255, 255, 0.08);
       }
 
       .field:last-child {
-        padding-bottom: 0;
-        border-bottom: 0;
+        border-bottom: 1px solid rgba(127, 127, 127, 0.16);
       }
 
       .label {
@@ -165,15 +201,16 @@ def create_legislator_card_html() -> str:
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
+        margin-top: 14px;
       }
 
       .chip {
         border-radius: 999px;
-        padding: 6px 10px;
-        background: rgba(43, 127, 255, 0.13);
-        color: color-mix(in srgb, CanvasText 88%, #2b7fff 12%);
+        padding: 7px 11px;
+        background: color-mix(in srgb, #2b7fff 16%, Canvas 84%);
+        color: color-mix(in srgb, CanvasText 86%, #2b7fff 14%);
         font-size: 13px;
-        font-weight: 650;
+        font-weight: 750;
       }
 
       .empty {
@@ -181,6 +218,41 @@ def create_legislator_card_html() -> str:
         border: 1px dashed rgba(127, 127, 127, 0.35);
         border-radius: 18px;
         color: color-mix(in srgb, CanvasText 68%, transparent);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .wide {
+        grid-column: 1 / -1;
+      }
+
+      @media (max-width: 560px) {
+        body {
+          padding: 12px;
+        }
+
+        .hero {
+          align-items: center;
+          padding: 18px;
+        }
+
+        .avatar {
+          width: 92px;
+          height: 112px;
+          border-radius: 22px;
+        }
+
+        .content {
+          padding: 16px 18px 18px;
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
@@ -234,6 +306,14 @@ def create_legislator_card_html() -> str:
           return value.toolOutput.structuredContent;
         }
 
+        if (value.result?.structuredContent?.legislator) {
+          return value.result.structuredContent;
+        }
+
+        if (value.result?.legislator) {
+          return value.result;
+        }
+
         return value.structuredContent || value.toolOutput || value;
       }
 
@@ -243,49 +323,95 @@ def create_legislator_card_html() -> str:
         const root = document.getElementById("root");
 
         if (!legislator || output.found === false) {
-          root.className = "empty";
-          root.textContent = output.message || "找不到可顯示的立委資料。";
-          return;
+          return false;
         }
 
         const committees = splitItems(legislator.committee).slice(-3);
         const phones = splitItems(legislator.tel).slice(0, 3).join("\\n");
         const degree = splitItems(legislator.degree).slice(0, 3).join("\\n");
         const experience = splitItems(legislator.experience).slice(0, 4).join("\\n");
+        const photo = legislator.imageUrl || "";
+        const initials = String(legislator.name || "?").slice(0, 2);
 
         root.className = "card";
         root.innerHTML = `
           <section class="hero">
-            <img class="avatar" src="${escapeHtml(legislator.imageUrl)}" alt="${escapeHtml(legislator.name)}照片" />
+            ${
+              photo
+                ? `<img class="avatar" src="${escapeHtml(photo)}" alt="${escapeHtml(legislator.name)}照片" />`
+                : `<div class="avatar avatarFallback">${escapeHtml(initials)}</div>`
+            }
             <div>
+              <div class="eyebrow">立法院委員資料卡</div>
               <h1 class="name">${escapeHtml(legislator.name)}</h1>
               <p class="subtitle">${escapeHtml(legislator.ename || "")}</p>
-              <div class="chips" style="margin-top: 10px;">
+              <div class="chips">
                 <span class="chip">${escapeHtml(legislator.party || "政黨未提供")}</span>
+                <span class="chip">${escapeHtml(legislator.areaName || "選區未提供")}</span>
                 <span class="chip">第 ${escapeHtml(legislator.term || "")} 屆</span>
               </div>
             </div>
           </section>
           <section class="content">
-            ${field("選區", legislator.areaName)}
-            ${field("近期委員會", committees.join("\\n"))}
-            ${field("聯絡電話", phones)}
-            ${field("學歷", degree)}
-            ${field("經歷摘要", experience)}
+            <div class="grid">
+              ${field("就任日期", legislator.onboardDate)}
+              ${field("聯絡電話", phones)}
+              ${field("近期委員會", committees.join("\\n"))}
+              ${field("服務處地址", legislator.addr)}
+              <div class="wide">${field("學歷", degree)}</div>
+              <div class="wide">${field("經歷摘要", experience)}</div>
+            </div>
           </section>
         `;
+        return true;
       }
 
-      function render() {
-        renderFromOutput({
+      function getToolInputName(payload) {
+        return (
+          payload?.toolInput?.name ||
+          payload?.input?.name ||
+          window.openai?.toolInput?.name ||
+          "黃國昌"
+        );
+      }
+
+      function renderEmpty(message) {
+        const root = document.getElementById("root");
+        root.className = "empty";
+        root.textContent = message || "找不到可顯示的立委資料。";
+      }
+
+      async function hydrateWithToolCall(name) {
+        if (typeof window.openai?.callTool !== "function") return false;
+
+        try {
+          const result = await window.openai.callTool("get_legislator_profile_data", { name });
+          return renderFromOutput(result);
+        } catch (error) {
+          console.error("Unable to hydrate legislator card", error);
+          return false;
+        }
+      }
+
+      async function render(payload = {}) {
+        const bootPayload = {
           toolOutput: window.openai?.toolOutput,
           toolResponseMetadata: window.openai?.toolResponseMetadata,
-        });
+          toolInput: window.openai?.toolInput,
+          ...payload,
+        };
+
+        if (renderFromOutput(bootPayload)) return;
+
+        const name = getToolInputName(bootPayload);
+        if (await hydrateWithToolCall(name)) return;
+
+        renderEmpty(`找不到 ${name} 的可顯示委員資料。`);
       }
 
       render();
       window.addEventListener("openai:set_globals", (event) => {
-        renderFromOutput(event.detail?.globals || {});
+        render(event.detail?.globals || event.detail || {});
       });
 
       window.addEventListener("message", (event) => {
@@ -295,7 +421,7 @@ def create_legislator_card_html() -> str:
         if (message.method !== "ui/notifications/tool-result") return;
 
         const result = message.params || {};
-        renderFromOutput(result);
+        render(result);
       });
     </script>
   </body>
@@ -344,11 +470,7 @@ async def search_legislature_dataset(
     )
 
 
-@mcp.tool(meta=CARD_TOOL_META)
-async def get_legislator_profile(name: str = "黃國昌") -> types.CallToolResult:
-    """
-    查詢指定立法委員基本資料，預設查詢黃國昌。
-    """
+async def lookup_legislator_profile(name: str = "黃國昌") -> dict:
     data = await fetch_legislature_dataset(dataset_id="9", page=1, select_term="all")
     legislators = data.get("jsonList", [])
     legislator = next(
@@ -357,38 +479,62 @@ async def get_legislator_profile(name: str = "黃國昌") -> types.CallToolResul
     )
 
     if not legislator:
+        return {
+            "found": False,
+            "name": name,
+            "message": f"找不到{name}的立法委員資料。",
+        }
+
+    pic_url = legislator.get("picUrl") or ""
+
+    return {
+        "found": True,
+        "legislator": {
+            "found": True,
+            "name": legislator.get("name"),
+            "ename": legislator.get("ename"),
+            "party": legislator.get("party"),
+            "partyGroup": legislator.get("partyGroup"),
+            "areaName": legislator.get("areaName"),
+            "committee": legislator.get("committee"),
+            "tel": legislator.get("tel"),
+            "fax": legislator.get("fax"),
+            "addr": legislator.get("addr"),
+            "degree": legislator.get("degree"),
+            "experience": legislator.get("experience"),
+            "term": legislator.get("term"),
+            "onboardDate": legislator.get("onboardDate"),
+            "imageUrl": pic_url.replace("http://", "https://"),
+        },
+    }
+
+
+@mcp.tool()
+async def get_legislator_profile_data(name: str = "黃國昌") -> dict:
+    """
+    提供委員資料卡 widget 讀取指定立法委員的結構化資料。
+    """
+    return await lookup_legislator_profile(name)
+
+
+@mcp.tool(meta=CARD_TOOL_META)
+async def get_legislator_profile(name: str = "黃國昌") -> types.CallToolResult:
+    """
+    查詢指定立法委員基本資料，預設查詢黃國昌。
+    """
+    result = await lookup_legislator_profile(name)
+
+    if not result["found"]:
         return types.CallToolResult(
             content=[
                 types.TextContent(type="text", text=f"找不到{name}的立法委員資料。")
             ],
-            structuredContent={
-                "found": False,
-                "name": name,
-                "message": f"找不到{name}的立法委員資料。",
-            },
+            structuredContent=result,
             _meta=CARD_TOOL_META,
             isError=False,
         )
 
-    pic_url = legislator.get("picUrl") or ""
-
-    profile = {
-        "found": True,
-        "name": legislator.get("name"),
-        "ename": legislator.get("ename"),
-        "party": legislator.get("party"),
-        "partyGroup": legislator.get("partyGroup"),
-        "areaName": legislator.get("areaName"),
-        "committee": legislator.get("committee"),
-        "tel": legislator.get("tel"),
-        "fax": legislator.get("fax"),
-        "addr": legislator.get("addr"),
-        "degree": legislator.get("degree"),
-        "experience": legislator.get("experience"),
-        "term": legislator.get("term"),
-        "onboardDate": legislator.get("onboardDate"),
-        "imageUrl": pic_url.replace("http://", "https://"),
-    }
+    profile = result["legislator"]
 
     return types.CallToolResult(
         content=[
@@ -397,10 +543,7 @@ async def get_legislator_profile(name: str = "黃國昌") -> types.CallToolResul
                 text=f"已找到{profile['name']}委員的資料卡片。",
             )
         ],
-        structuredContent={
-            "found": True,
-            "legislator": profile,
-        },
+        structuredContent=result,
         _meta=CARD_TOOL_META,
         isError=False,
     )
