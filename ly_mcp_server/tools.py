@@ -1,4 +1,4 @@
-from mcp import types
+from fastmcp.tools import ToolResult
 
 from ly_mcp_server.legislators import lookup_legislator_profile
 from ly_mcp_server.ly_client import fetch_legislature_dataset
@@ -29,35 +29,23 @@ def register_tools(mcp) -> None:
         return await lookup_legislator_profile(name)
 
     @mcp.tool(meta=CARD_TOOL_META)
-    async def get_legislator_profile(name: str = "黃國昌") -> types.CallToolResult:
+    async def get_legislator_profile(name: str = "黃國昌") -> ToolResult:
         """
         查詢指定立法委員基本資料，預設查詢黃國昌。
         """
         result = await lookup_legislator_profile(name)
 
         if not result["found"]:
-            return types.CallToolResult(
-                content=[
-                    types.TextContent(
-                        type="text",
-                        text=f"找不到{name}的立法委員資料。",
-                    )
-                ],
-                structuredContent=result,
-                _meta=CARD_TOOL_META,
-                isError=False,
+            return ToolResult(
+                content=f"找不到{name}的立法委員資料。",
+                structured_content=result,
+                meta=CARD_TOOL_META,
             )
 
         profile = result["legislator"]
 
-        return types.CallToolResult(
-            content=[
-                types.TextContent(
-                    type="text",
-                    text=f"已找到{profile['name']}委員的資料卡片。",
-                )
-            ],
-            structuredContent=result,
-            _meta=CARD_TOOL_META,
-            isError=False,
+        return ToolResult(
+            content=f"已找到{profile['name']}委員的資料卡片。",
+            structured_content=result,
+            meta=CARD_TOOL_META,
         )
