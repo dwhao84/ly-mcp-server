@@ -7,7 +7,16 @@ import ssl
 mcp = FastMCP("立法院 Open Data MCP")
 
 BASE_URL = "https://data.ly.gov.tw/odw/openDatasetJson.action"
-CARD_TEMPLATE_URI = "ui://widget/legislator-card.html"
+LY_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+    ),
+    "Accept": "application/json, text/plain, */*",
+    "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8",
+    "Accept-Encoding": "identity",
+}
+CARD_TEMPLATE_URI = "ui://widget/legislator-card-v2.html"
 CARD_MIME_TYPE = "text/html;profile=mcp-app"
 CARD_TOOL_META = {
     "openai/outputTemplate": CARD_TEMPLATE_URI,
@@ -47,7 +56,7 @@ async def fetch_legislature_dataset(
         timeout=20,
         verify=create_ly_ssl_context(),
         trust_env=False,
-        headers={"Accept-Encoding": "identity"},
+        headers=LY_HEADERS,
     ) as client:
         response = await client.get(BASE_URL, params=params)
         response.raise_for_status()
@@ -202,8 +211,7 @@ def create_legislator_card_html() -> str:
         `;
       }
 
-      function render() {
-        const output = window.openai?.toolOutput || {};
+      function renderFromOutput(output) {
         const legislator = output.legislator;
         const root = document.getElementById("root");
 
@@ -241,8 +249,20 @@ def create_legislator_card_html() -> str:
         `;
       }
 
+      function render() {
+        renderFromOutput(window.openai?.toolOutput || {});
+      }
+
       render();
-      window.addEventListener("message", render);
+      window.addEventListener("message", (event) => {
+        if (event.source !== window.parent) return;
+        const message = event.data;
+        if (!message || message.jsonrpc !== "2.0") return;
+        if (message.method !== "ui/notifications/tool-result") return;
+
+        const result = message.params || {};
+        renderFromOutput(result.structuredContent || result);
+      });
     </script>
   </body>
 </html>
@@ -256,7 +276,14 @@ def create_legislator_card_html() -> str:
     meta={
         "openai/widgetDescription": "顯示立法委員照片、政黨、選區、委員會、聯絡方式與簡歷的資料卡。",
         "openai/widgetPrefersBorder": True,
-        "ui": {"prefersBorder": True},
+        "ui": {
+            "prefersBorder": True,
+            "domain": "https://ly-mcp-server.onrender.com",
+            "csp": {
+                "connectDomains": [],
+                "resourceDomains": ["https://www.ly.gov.tw"],
+            },
+        },
     },
 )
 async def legislator_card_template() -> str:
