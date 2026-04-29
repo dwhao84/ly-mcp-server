@@ -30,9 +30,10 @@ async def search_legislature_dataset(
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
+    port = int(os.environ.get("PORT", "8000"))
     mcp.run(
-        transport="sse",
+        transport="streamable-http",
         host="0.0.0.0",
         port=port,
+        path="/mcp",
     )
